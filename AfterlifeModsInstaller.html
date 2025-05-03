@@ -27,13 +27,38 @@
             line-height: 1.6em;
         }
 
-        .card {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);
-            margin-bottom: 20px;
-        }
+		.card {
+			background-color: #1e1e1e;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);
+			margin-bottom: 20px;
+			overflow-x: auto;
+			scrollbar-width: thin; /* Firefox */
+			scrollbar-color: black #2e2e2e; /* Firefox thumb and track */
+		}
+		
+		/* Chrome, Edge, Safari */
+		.card::-webkit-scrollbar {
+			height: 6px; /* Horizontal scrollbar height */
+		}
+		
+		.card::-webkit-scrollbar-track {
+			background: #2e2e2e;
+			border-radius: 3px;
+		}
+		
+		.card::-webkit-scrollbar-thumb {
+			background: black;
+			border-radius: 3px;
+		}
+		
+		.card::-webkit-scrollbar-button {
+			display: block;
+			width: 6px;
+			height: 6px;
+			background-color: black;
+		}
 
         a {
             color: #c77dff;
@@ -118,6 +143,14 @@
 			outline: none;
 			box-shadow: 0px 2px 7px rgba(79, 0, 90, 1);
 		}
+		.url-trim {
+			display: inline-block;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			vertical-align: top;
+		}		
     </style>
 </head>
 <body>
@@ -140,7 +173,7 @@
 			Here is some different mods you can download:
 			<br>
 			• Afterlife Asset Bundle Loader<br>
-			- https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=sqydeyd4&dl=1
+			- <span class="url-trim">https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=sqydeyd4&dl=1</span>
 			• Afterlife Mod Menu - not released yet.<br>
 			- not added<br>
 			• Other Small Patches<br>
