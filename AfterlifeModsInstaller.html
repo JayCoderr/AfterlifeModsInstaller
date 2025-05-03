@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Afterlife Mods Installer</title>
+    <style>
+		body {
+			background-color: #121212;
+			color: #ffffff;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			padding: 40px;
+			overflow-y: scroll; /* allow scroll even if scrollbar is hidden */
+		}
+		
+		/* Hide scrollbar in WebKit (used by WebView2) */
+		body::-webkit-scrollbar {
+			width: 0px;
+			background: transparent; /* optional, hides background */
+		}
+
+        h1 {
+            color: #c77dff;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6em;
+        }
+
+        .card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #c77dff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .exit-button, .ask-button, .download-button, .select-path-button {
+            background-color: #c77dff;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.5);
+            transition: background-color 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .exit-button:hover, .download-button:hover, .select-path-button:hover {
+            background-color: #a55de0;
+        }
+
+		.debug-area {
+			width: 96%;
+			height: 150px;
+			background-color: #1e1e1e;
+			color: #ffffff;
+			border-radius: 5px;
+			padding: 10px;
+			font-family: Consolas, monospace;
+			font-size: 1em;
+			white-space: pre-wrap;
+			word-wrap: break-word;
+			margin-top: 20px;
+			overflow-y: scroll; /* Enable vertical scroll */
+			scrollbar-width: none; /* Firefox */
+			-ms-overflow-style: none; /* IE 10+ */
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);			
+		}
+		
+		.debug-area::-webkit-scrollbar {
+			display: none; /* Chrome, Safari, Opera */
+		}
+		.question-box {
+			margin-bottom: 15px;
+		}
+		
+		#userInput {
+			width: 300px;
+			padding: 8px;
+			border-radius: 4px;
+			background-color: #2a2a2a;
+			color: #eee;
+			border: none;
+			outline: none;
+			box-shadow: 0px 2px 7px rgba(79, 0, 90, 1);
+		}
+    </style>
+</head>
+<body>
+    <h1>Afterlife Mods Installer</h1>
+	<div class="card" id="cardText">
+		<p id="typeTarget">
+			Hello, Anonymous user, this is Afterlife Reloaded Ai,<br><br>
+			Welcome to the dark side of programming,<br>
+			This is your modding dashboard,<br><br>
+			Install your first Afterlife Reloaded schedule 1,<br>
+			mod below with download mod button!<br><br>
+			You will need to select a install path first, to get started,<br>
+			where you would like everything installed, I suggest you choose<br>
+			your steam game path for example mine is:<br><br>
+			"C:\Program Files (x86)\Steam\steamapps\common\Schedule I"
+			<br><br>
+			Your's is probably the same,<br>
+			Unless you set your pc up differently from a normal setup.
+			<br><br>
+			Here is some different mods you can download:
+			<br>
+			• Afterlife Asset Bundle Loader<br>
+			• Afterlife Mod Menu - not released yet.<br>
+			• Other Small Patches<br>
+			• Other mods.<br>
+			• Code question's related to this<br>
+			<br>
+			You can also import assets with this tool,<br>
+			you can get a asset bundler script for unity engine,<br>
+			as well as other things.<br>
+		</p>
+	</div>
+
+	<!-- Text input for user questions -->
+	<div class="question-box">
+		<input type="text" id="userInput" placeholder="Ask Afterlife a question..." />
+		<button class="ask-button" onclick="handleUserQuestion()">Ask</button>
+		<button class="download-button" onclick="downloadMod()">Download Mod</button>
+	</div>
+	
+	<!-- Debug area for messages (AI responses will be typed here) -->
+	<div id="debugArea" class="debug-area"></div>
+	
+	<!-- Display selected path -->
+	<div id="pathDisplay" class="path-display"></div>
+	
+	<!-- Buttons for actions -->
+	<button class="select-path-button" onclick="selectPath()">Select Installation Path</button>
+	<button class="exit-button" onclick="window.chrome.webview.postMessage('exit')">Exit Application</button>
+	<!-- functions -->
+	<script>
+	async function simulateTypingHtml(element, delay = 30) {
+		const html = element.innerHTML;
+		element.innerHTML = ''; // Clear original content
+	
+		let i = 0;
+		const typeChar = async () => {
+			if (i < html.length) {
+				const char = html[i];
+				// Preserve tags like <br>
+				if (char === '<') {
+					const endTag = html.indexOf('>', i);
+					element.innerHTML += html.slice(i, endTag + 1);
+					i = endTag + 1;
+				} else {
+					element.innerHTML += char;
+					i++;
+				}
+				await new Promise(resolve => setTimeout(resolve, delay));
+				typeChar();
+			}
+		};
+	
+		typeChar();
+	}
+	
+	window.onload = () => {
+		const p = document.getElementById("typeTarget");
+		simulateTypingHtml(p, 25); // adjust typing speed here
+	};
+	</script>
+	<script>
+	// Predefined responses
+	const predefinedAnswers = {
+		"hi": "Hello, this is Afterlife Reloaded AI Mod Installer, How can I help you Anonymous user?",
+		"hello": "Hello, this is Afterlife Reloaded AI Mod Installer, How can I help you Anonymous user?",
+		"how do i install": "Click 'Select Installation Path' first, then hit 'Download Mod'.",
+		"how do i install?": "Click 'Select Installation Path' first, then hit 'Download Mod'.",
+		"what is afterlife": "Afterlife is your modding dashboard for Schedule I. Welcome to the dark side.",
+		"where do i install": "We recommend using your Steam game path like: C:\\Program Files (x86)\\Steam\\steamapps\\common\\Schedule I",
+		"exit": "Click the 'Exit Application' button to close the app.",
+		"mod not working": "Make sure the install path is correct and you've clicked 'Download Mod'.",
+		"nothing is happening": "Make sure the install path is correct and you've clicked 'Download Mod'.",
+		"how do i select a path": "Click the 'Select Installation Path' button to choose your installation directory.",
+		"what is the install path": "The installation path is where your mod will be installed. We recommend your Steam game path.",
+		"can you help me?": "Of course! I'm here to help you with the installation process.",
+		"what is schedule 1": "Schedule 1 is a unity game, about selling drugs and building your empire.",
+		"why isn't it working": "Check if your selected path is correct and that you've downloaded the mod. If problems persist, restart Afterlife.",
+		"how to uninstall": "To uninstall, simply delete the mod from your installation directory. You can also use the uninstaller if provided.",
+		"mod download failed": "There might be an issue with your internet connection or the selected path. Try again.",
+		"how can i contact support": "For support, you can reach out to the Afterlife Reloaded community or consult the documentation.",
+		"what is this app": "This is Afterlife Reloaded AI Mod Installer, designed to make installing mods for Schedule I easier.",
+		"is this free": "Yes, Afterlife Reloaded is free to use for modding Schedule I.",
+		"can i add my own mods": "Yes, you can add your own mods by placing them in the installation directory and selecting them during installation.",
+		"is there a tutorial": "Yes, you can find a tutorial in the documentation or ask here for specific instructions.",
+		"how to start modding": "Click 'Select Installation Path' to choose a directory, then click 'Download Mod' to begin the modding process.",
+		"where can i get mods": "You can download mods from various community sites like 'nexus' or create your own mods using the Schedule 1 framework.",
+		"is there a forum": "Yes, Afterlife Reloaded has a community forum where users share mods and troubleshoot issues.",
+		"what are the system requirements": "Afterlife Reloaded requires a Windows machine with at least 4GB of RAM and 1GB of free storage.",
+		"can i use it on mac": "Currently, Afterlife Reloaded is designed for Windows, but you can try running it through a Windows emulator.",
+		"what if the install path is wrong": "If the install path is wrong, the mod won't install. You can select the correct path by clicking 'Select Installation Path'.",
+		"how to update mods": "To update mods, just redownload them and place them in the correct directory, then select the path again.",
+		"what's new in this version": "This version includes bug fixes, performance improvements, and better support for newer mod formats.",
+		"can i modify the mods": "Yes, you can modify the mods to suit your preferences, as long as you follow the modding guidelines.",
+		"is there a backup option": "Currently, there's no automatic backup feature, but you can manually copy your mod files to another location.",
+		"how to change settings": "To change settings, you can modify the configuration files or ask here for guidance on specific changes.",
+		"do you have themes": "Afterlife Reloaded doesn't support themes right now, but this feature is being considered for future updates.",
+		"how do i reset settings": "To reset settings, simply delete the configuration file and restart the application.",
+		"why do i need steam": "We recommend using your Steam path for mods, as that's where many games are installed, but it's not strictly required.",
+		"does this work with all games": "Currently, Afterlife Reloaded is focused on Schedule I mods, but other games may be supported in the future.",
+		"what is the download mod button": "The 'Download Mod' button downloads the mod to the selected installation path.",
+		"what does the select path button do": "The 'Select Path' button allows you to choose the folder where the mod will be installed.",
+		"can i pause the installation": "Currently, there is no pause functionality. You'll need to wait for the mod to finish installing.",
+		"how long does installation take": "The installation time depends on the mod size and your system's performance, but it usually takes just a few minutes.",
+		"is there a log for errors": "Yes, you can check the debug area for error messages if something goes wrong during the installation.",
+		"how do i check if the mod is installed": "You can verify the installation by checking the selected path for the mod files or using the application to detect installed mods.",
+		"do i need an internet connection": "Yes, an internet connection is required to download mods, but you can install them offline afterward.",
+		"how do i uninstall mods": "To uninstall, simply delete the mod files from the selected path, or use the uninstaller if available.",
+		"can i use mods with any version": "Mods are usually version-specific. Make sure you're using the correct mod version for your game version.",
+		"is there an auto-update feature": "Currently, there is no auto-update feature, but you can manually download the latest mods.",
+		"how do i use afterlife": "Afterlife Reloaded is easy to use! Just select a path, download a mod, and follow the on-screen instructions.",
+		"can i create my own mods": "Yes! You can create your own mods for Afterlife Reloaded using the provided modding tools and documentation.",
+		"how to get started with modding": "Start by selecting an installation path, then download your first mod. From there, you can experiment with other mods and customization options.",
+		"how do i save my progress": "Your progress is saved automatically once the mod is downloaded. You can resume anytime from the selected installation path.",
+		"how do i change the installation directory": "To change the installation directory, click the 'Select Installation Path' button and choose a different folder.",
+		"how do i download a custom mod?" : "You can download custom mods by entering a URL instead of a question, then clicking Download Mod.",
+		"how do i download a custom mod" : "You can download custom mods by entering a URL instead of a question, then clicking Download Mod.",	
+		"where do i find the installation path?" : "Click the 'Select Path' button and choose your game's installation folder.",
+		"where do i find the installation path" : "Click the 'Select Path' button and choose your game's installation folder.",
+		"why is the download not working?" : "Make sure you've selected an installation path and that the URL is a direct download link.",
+		"why is the download not working" : "Make sure you've selected an installation path and that the URL is a direct download link.",
+		"can i use dropbox links?" : "Yes, but make sure the link ends with dl=1 for direct downloading.",
+		"can i use dropbox links" : "Yes, but make sure the link ends with dl=1 for direct downloading.",
+		"what file types are supported?" : "Right now, only .zip and .rar mod archives are supported.",
+		"what file types are supported" : "Right now, only .zip and .rar mod archives are supported.",
+		"how do i know if the mod installed correctly?" : "If you see a 'Download complete' message with the correct path, it's installed.",
+		"how do i know if the mod installed correctly" : "If you see a 'Download complete' message with the correct path, it's installed.",
+		"can i install multiple mods?" : "Yes, just download them one at a time to the same mod folder.",
+		"can i install multiple mods" : "Yes, just download them one at a time to the same mod folder.",
+		"does this work with steam games?" : "Yes, just point the installation path to your Steam game directory.",
+		"does this work with steam games" : "Yes, just point the installation path to your Steam game directory.",
+		"what happens if i click download with no url?" : "If there's no valid URL, the mod won't download and you’ll see an error.",
+		"what happens if i click download with no url" : "If there's no valid URL, the mod won't download and you’ll see an error.",
+		"can i use mods from other websites?" : "Yes, as long as the link goes directly to the file and not a preview page.",
+		"can i use mods from other websites" : "Yes, as long as the link goes directly to the file and not a preview page."
+	};
+	
+	// Function to handle the user's question
+	function handleUserQuestion() {
+		const input = document.getElementById("userInput").value.toLowerCase();
+		const responseBox = document.getElementById("debugArea");
+	
+		let matched = Object.entries(predefinedAnswers).find(([key]) => input.includes(key));
+		let response = matched ? matched[1] : "I'm not sure how to answer that. Try asking something else.";
+	
+		typeOutResponse(responseBox, response);
+	}
+	
+	// Function to simulate typing in the debug area
+	function typeOutResponse(element, message) {
+		let index = 0;
+		element.innerText = ""; // Clear previous response
+	
+		function typeNextCharacter() {
+			if (index < message.length) {
+				element.innerText += message[index++];
+				setTimeout(typeNextCharacter, 25); // Adjust typing speed here (in ms)
+			}
+		}
+	
+		typeNextCharacter();
+	}
+	</script>
+	<script>
+		function postDebugMessage(message) {
+			const debugArea = document.getElementById("debugArea"); // You can rename this back to debugArea if needed
+			if (debugArea) {
+				debugArea.textContent = message; // Replaces instead of appending
+			}
+		}
+	
+		function downloadMod() {
+			const customUrl = document.getElementById('userInput').value.trim();
+		
+			if (customUrl) {
+				// Send the URL string directly
+				window.chrome.webview.postMessage(customUrl);
+			} else {
+				// Send fallback instruction
+				window.chrome.webview.postMessage('downloadMod');
+			}
+		}
+
+		// Function that handles the response when the C# code sends the selected path
+		window.chrome.webview.addEventListener('message', function(event) {
+			if (event.data && event.data.path) {
+				// This is where the path will be displayed
+				postDebugMessage("Selected path: " + event.data.path);
+			}
+		});
+		
+		// Handle "Select Installation Path" button click
+		function selectPath() {
+			window.chrome.webview.postMessage('selectPath');
+			postDebugMessage("Select Path button clicked.");
+		}
+	
+		// Handle path response from C#
+		window.chrome.webview.addEventListener('message', function(event) {
+			if (event.data && event.data.path) {
+				// Display the selected path in the HTML page
+				document.getElementById("pathDisplay").innerText = "Selected Path: " + event.data.path;
+				postDebugMessage("Installation path selected: " + event.data.path);
+			}
+		});
+	</script>
+</body>
+</html>
