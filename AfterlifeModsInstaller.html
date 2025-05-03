@@ -71,7 +71,7 @@
             text-decoration: underline;
         }
 
-        .exit-button, .ask-button, .download-button, .select-path-button {
+        .exit-button, .Import-button, .ask-button, .download-button, .select-path-button {
             background-color: #c77dff;
             color: #121212;
             border: none;
@@ -203,6 +203,7 @@
 	<div id="pathDisplay" class="path-display"></div>
 	
 	<!-- Buttons for actions -->
+	<button class="Import-button" onclick="ImportAsset()">Import Asset</button>
 	<button class="download-button" onclick="downloadMod()">Download Mod</button>
 	<button class="select-path-button" onclick="selectPath()">Select Installation Path</button>
 	<button class="exit-button" onclick="window.chrome.webview.postMessage('exit')">Exit Application</button>
@@ -367,7 +368,8 @@
 	
 	// Function to handle the user's question
 	function handleUserQuestion() {
-		const input = document.getElementById("userInput").value.trim().toLowerCase(); // Normalize input
+		const inputBox = document.getElementById("userInput");
+		const input = inputBox.value.trim().toLowerCase(); // Normalize input
 		const responseBox = document.getElementById("debugArea");
 	
 		// Look for an exact match or partial match with keys
@@ -380,8 +382,11 @@
 	
 		// If a match is found, return the corresponding answer, otherwise a default message
 		let response = matched ? matched[1] : "I'm not sure how to answer that. Try asking something else.";
-		
+	
 		typeOutResponse(responseBox, decodeHTMLEntities(response));
+	
+		// Clear the input field after handling the question
+		inputBox.value = "";
 	}
 
 	function decodeHTMLEntities(text) {
@@ -425,7 +430,19 @@
 				debugArea.textContent = message; // Replaces instead of appending
 			}
 		}
-	
+		function ImportAsset() {
+			const customAsset = document.getElementById('userInput').value.trim();
+		
+			if (customAsset.toLowerCase().startsWith("install asset ")) {
+				const assetName = customAsset.replace("install asset", "").trim();
+				const message = "updateConfig " + assetName;
+		
+				window.chrome.webview.postMessage(message);
+				postDebugMessage("Requesting asset install: " + assetName);
+			}
+		
+			document.getElementById("userInput").value = ""; // Clear input after sending
+		}
 		function downloadMod() {
 			const customUrl = document.getElementById('userInput').value.trim();
 		
