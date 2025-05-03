@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -58,6 +59,75 @@ namespace AfterlifeModsInstaller
 
                 UpdateDebugMessage("");
                 await DownloadModFromUrl(customUrl);
+            }
+            if (message.Contains("updateConfig"))
+            {
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(installationPath))
+                    {
+                        UpdateDebugMessage("Please select an installation path before updating the config file.");
+                        return;
+                    }
+
+                    // Extract asset name
+                    string assetName = message.Replace("updateConfig", "").Trim();
+
+                    string configPath = Path.Combine(installationPath, "Mods", "AssetBundles", "AfterlifeAssetBundles.txt");
+                    string assetBundlesFolder = Path.Combine(installationPath, "Mods", "AssetBundles");
+
+                    // Ensure directory exists for the asset bundles
+                    Directory.CreateDirectory(assetBundlesFolder);
+
+                    // Search for any file that matches the asset name in the installation path
+                    string[] assetFiles = Directory.GetFiles(installationPath, assetName + ".*", SearchOption.TopDirectoryOnly);
+
+                    if (assetFiles.Length == 0)
+                    {
+                        // Notify user to manually move the asset
+                        webView21.CoreWebView2.PostWebMessageAsJson(
+                            JsonSerializer.Serialize(new
+                            {
+                                status = "error",
+                                message = $"No file found matching \"{assetName}\" in the installation path. Please move the asset there manually."
+                            })
+                        );
+                        return;
+                    }
+
+                    // Move found files to AssetBundles folder
+                    foreach (var file in assetFiles)
+                    {
+                        string destFile = Path.Combine(assetBundlesFolder, Path.GetFileName(file));
+                        File.Move(file, destFile, overwrite: true);
+                    }
+
+                    // Write asset name to config file if it's not already there
+                    if (!File.Exists(configPath))
+                    {
+                        File.WriteAllText(configPath, assetName + Environment.NewLine);
+                    }
+                    else
+                    {
+                        var lines = new HashSet<string>(File.ReadAllLines(configPath), StringComparer.OrdinalIgnoreCase);
+                        if (!lines.Contains(assetName))
+                        {
+                            File.AppendAllText(configPath, assetName + Environment.NewLine);
+                        }
+                    }
+
+                    // Notify JavaScript about success
+                    webView21.CoreWebView2.PostWebMessageAsJson(
+                        JsonSerializer.Serialize(new { status = "assetAdded", asset = assetName })
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // Notify JavaScript about error
+                    webView21.CoreWebView2.PostWebMessageAsJson(
+                        JsonSerializer.Serialize(new { status = "error", message = ex.Message })
+                    );
+                }
             }
             else if (message == "downloadMod")
             {
@@ -146,10 +216,119 @@ namespace AfterlifeModsInstaller
 
                 File.Delete(targetFile);
                 UpdateDebugMessage("Mod extracted and cleaned up successfully.");
+
+                // Download and extract latest MelonLoader
+                await DownloadLatestMelonLoaderAsync();
             }
             catch (Exception ex)
             {
                 UpdateDebugMessage("Error downloading or extracting mod: " + ex.Message);
+            }
+        }
+
+        private async Task DownloadLatestMelonLoaderAsync()
+        {
+            try
+            {
+                string architecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+                using HttpClient client = new HttpClient();
+
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("request"); // Required for GitHub API
+
+                var response = await client.GetAsync("https://api.github.com/repos/LavaGang/MelonLoader/releases/latest");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                using JsonDocument doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                string tagName = root.GetProperty("tag_name").GetString();
+                var assets = root.GetProperty("assets").EnumerateArray();
+
+                string downloadUrl = null;
+
+                foreach (var asset in assets)
+                {
+                    var name = asset.GetProperty("name").GetString();
+                    if (name.Contains($"MelonLoader.{architecture}.zip"))
+                    {
+                        downloadUrl = asset.GetProperty("browser_download_url").GetString();
+                        break;
+                    }
+                }
+
+                if (downloadUrl == null)
+                {
+                    UpdateDebugMessage($"Could not find a suitable MelonLoader.{architecture}.zip in the latest release.");
+                    return;
+                }
+
+                string melonZipPath = Path.Combine(installationPath, $"MelonLoader.{architecture}.zip");
+                byte[] zipData = await client.GetByteArrayAsync(downloadUrl);
+                await File.WriteAllBytesAsync(melonZipPath, zipData);
+
+                ZipFile.ExtractToDirectory(melonZipPath, installationPath, overwriteFiles: true);
+                File.Delete(melonZipPath);
+
+                UpdateDebugMessage($"Installed MelonLoader {tagName} ({architecture}).");
+            }
+            catch (Exception ex)
+            {
+                UpdateDebugMessage($"Failed to install MelonLoader: {ex.Message}");
+            }
+        }
+
+        private static readonly HttpClient client = new HttpClient();
+
+        public async Task DownloadLatestMelonLoaderAsync(string architecture)
+        {
+            try
+            {
+                // Fetch the latest release information
+                var response = await client.GetAsync("https://api.github.com/repos/LavaGang/MelonLoader/releases/latest");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                // Parse the JSON to find the appropriate asset
+                using (JsonDocument doc = JsonDocument.Parse(json))
+                {
+                    var root = doc.RootElement;
+                    var tagName = root.GetProperty("tag_name").GetString();
+                    var assets = root.GetProperty("assets").EnumerateArray();
+
+                    string downloadUrl = null;
+
+                    foreach (var asset in assets)
+                    {
+                        var name = asset.GetProperty("name").GetString();
+                        if (name.Contains($"MelonLoader.{architecture}.zip"))
+                        {
+                            downloadUrl = asset.GetProperty("browser_download_url").GetString();
+                            break;
+                        }
+                    }
+
+                    if (downloadUrl != null)
+                    {
+                        Console.WriteLine($"Latest MelonLoader version: {tagName}");
+                        Console.WriteLine($"Downloading: {downloadUrl}");
+
+                        // Proceed to download the file
+                        var fileBytes = await client.GetByteArrayAsync(downloadUrl);
+                        System.IO.File.WriteAllBytes($"MelonLoader.{architecture}.zip", fileBytes);
+
+                        Console.WriteLine("Download completed successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No asset found for architecture: {architecture}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
         // Method to send messages to the debug area in the HTML
@@ -166,33 +345,43 @@ namespace AfterlifeModsInstaller
             }
         }
 
-        private string EscapeJsString(string input)
-        {
-            return input.Replace("\\", "\\\\")
-                        .Replace("'", "\\'")
-                        .Replace("\r", "")
-                        .Replace("\n", "\\n");
-        }
-
         private async void Form1_Load(object sender, EventArgs e)
         {
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
 
+            // Define the folder path where the HTML file will be stored
             string htmlFolderPath = Path.Combine(Application.StartupPath, "html_files");
-            Directory.CreateDirectory(htmlFolderPath);
+            Directory.CreateDirectory(htmlFolderPath);  // Creates folder if it doesn't exist
 
+            // Path to the HTML file
             string htmlFilePath = Path.Combine(htmlFolderPath, "AfterlifeModsInstaller.html");
 
             // URL to the raw HTML file in your GitHub repo
-            string githubRawUrl = "https://raw.githubusercontent.com/yourusername/yourrepo/main/html_files/AfterlifeModsInstaller.html";
+            string githubRawUrl = "https://raw.githubusercontent.com/JayCoderr/AfterlifeModsInstaller/master/AfterlifeModsInstaller.html";
 
             try
             {
+                // Fetch the HTML content from the GitHub raw URL
                 using (HttpClient client = new HttpClient())
                 {
                     string htmlContent = await client.GetStringAsync(githubRawUrl);
-                    await File.WriteAllTextAsync(htmlFilePath, htmlContent);
+
+                    // Check if the file already exists and only update if content differs (optional)
+                    if (File.Exists(htmlFilePath))
+                    {
+                        string existingContent = await File.ReadAllTextAsync(htmlFilePath);
+                        if (existingContent != htmlContent)
+                        {
+                            await File.WriteAllTextAsync(htmlFilePath, htmlContent);
+                            UpdateDebugMessage("Afterlife Mods Installer updated.");
+                        }
+                    }
+                    else
+                    {
+                        await File.WriteAllTextAsync(htmlFilePath, htmlContent);
+                        UpdateDebugMessage("Afterlife Mods Installer Latest Update Downloaded.");
+                    }
                 }
 
                 // Load the HTML file into WebView2
@@ -201,8 +390,9 @@ namespace AfterlifeModsInstaller
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to fetch HTML from GitHub:\n" + ex.Message);
+                MessageBox.Show($"Failed to fetch or update HTML from GitHub:\n{ex.Message}");
             }
+
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
