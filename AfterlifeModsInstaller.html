@@ -63,22 +63,44 @@
 
 		.debug-area {
 			width: 96%;
-			height: 150px;
 			background-color: #1e1e1e;
 			color: #ffffff;
 			border-radius: 5px;
 			padding: 10px;
 			font-family: Consolas, monospace;
 			font-size: 1em;
-			white-space: pre-wrap;
-			word-wrap: break-word;
+			white-space: pre;
+			overflow-x: auto;           /* Enable horizontal scroll */
+			overflow-y: auto;           /* Optional: also allow vertical scrolling */
+			word-wrap: normal;          /* Prevent word breaking */
 			margin-top: 20px;
-			overflow-y: scroll; /* Enable vertical scroll */
-			scrollbar-width: none; /* Firefox */
-			-ms-overflow-style: none; /* IE 10+ */
-            box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);			
+			box-shadow: 0 0 10px rgba(199, 125, 255, 0.3);
+			scrollbar-width: thin;      /* Firefox: use thin scrollbar */
+			scrollbar-color: black #2e2e2e; /* Firefox scrollbar track and thumb */
 		}
 		
+		/* Chrome, Edge, and Safari scrollbar styling */
+		.debug-area::-webkit-scrollbar {
+			height: 6px; /* Horizontal scrollbar height */
+			width: 6px;  /* Vertical scrollbar width */
+		}
+		
+		.debug-area::-webkit-scrollbar-track {
+			background: #2e2e2e;
+			border-radius: 3px;
+		}
+		
+		.debug-area::-webkit-scrollbar-thumb {
+			background: black;
+			border-radius: 3px;
+		}
+		
+		.debug-area::-webkit-scrollbar-button {
+			display: block;
+			width: 6px;
+			height: 6px;
+			background-color: black;
+		}	
 		.debug-area::-webkit-scrollbar {
 			display: none; /* Chrome, Safari, Opera */
 		}
@@ -253,8 +275,8 @@
 		"can i use mods from other websites" : "Yes, as long as the link goes directly to the file and not a preview page.",
 		"how do i install a mod?" : "To install a mod, download the mod file, place it in the mod folder, and select it in the mod menu to activate.",
 		"how do i install a mod" : "To install a mod, download the mod file, place it in the mod folder, and select it in the mod menu to activate.",		
-                "how do i change the settings?" : "To change the settings, open the menu using F1, navigate to the menu editor section, and adjust the bind controls as needed.",
-                "how do i change the settings" : "To change the settings, open the menu using F1, navigate to the menu editor section, and adjust the bind controls as needed.",		
+        "how do i change the settings?" : "To change the settings, open the menu using F1, navigate to the menu editor section, and adjust the bind controls as needed.",
+        "how do i change the settings" : "To change the settings, open the menu using F1, navigate to the menu editor section, and adjust the bind controls as needed.",		
 		"what are the menu controls?" : "press f1 to open the menu, use the arrow keys to scroll, press enter key to select a mod.",
 		"what are the menu controls" : "press f1 to open the menu, use the arrow keys to scroll, press enter key to select a mod.",		
   		"how do I open the menu?" : "press f1 to open the menu.",
@@ -297,7 +319,7 @@
   		"how do I pause a mod installation" : "Their is not a pause button for downloads.",		
   		"how do I cancel a mod installation?" : "You could probaby just exit the application, I don't have a cancel button added atm.",
   		"how do I cancel a mod installation" : "You could probaby just exit the application, I don't have a cancel button added atm.",
-		"can you give me unity asset bundle script" : "using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem(""Tools/Build AssetBundles"")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t// Set the directory where the asset bundles will be saved\n\t\tstring assetBundleDirectory = ""Assets/AssetBundles"";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t// Build the asset bundles and save them to the specified directory\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 // Use StandaloneWindows for 32-bit\n\t\t);\n\n\t\tDebug.Log(""✅ AssetBundles built!"");\n\n\t\t// Log the assets included in each bundle\n\t\tstring[] bundleNames = AssetDatabase.GetAllAssetBundleNames();\n\t\tforeach (string bundleName in bundleNames)\n\t\t{\n\t\t\tstring[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(bundleName);\n\t\t\tDebug.Log($""📦 Bundle '{bundleName}' includes:"");\n\n\t\t\tforeach (string path in assetPaths)\n\t\t{\n\t\t\t\tDebug.Log($""   - {path}"");\n\n\t\t\t\t// Log if the asset is a material or texture\n\t\t\t\tif (path.EndsWith("".mat""))\n\t\t\t\t{\n\t\t\t\t\tMaterial material = AssetDatabase.LoadAssetAtPath<Material>(path);\n\t\t\t\t\tDebug.Log($""      Material found: {material.name}"");\n\t\t\t\t\tforeach (var shaderProperty in material.GetTexturePropertyNames())\n\t\t\t\t\t{\n\t\t\t\t\t\tTexture texture = material.GetTexture(shaderProperty);\n\t\t\t\t\t\tif (texture != null)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tDebug.Log($""         Texture found: {texture.name}"");\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\telse if (path.EndsWith("".png"") || path.EndsWith("".jpg"") || path.EndsWith("".tga""))\n\t\t\t\t{\n\t\t\t\t\tTexture texture = AssetDatabase.LoadAssetAtPath<Texture>(path);\n\t\t\t\t\tDebug.Log($""      Texture found: {texture.name}"");\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}"
+		"can you give me unity asset bundle script" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`
 	};
 	
 	// Function to handle the user's question
@@ -316,24 +338,42 @@
 		// If a match is found, return the corresponding answer, otherwise a default message
 		let response = matched ? matched[1] : "I'm not sure how to answer that. Try asking something else.";
 		
-		typeOutResponse(responseBox, response);
+		typeOutResponse(responseBox, decodeHTMLEntities(response));
 	}
 
-	
+	function decodeHTMLEntities(text) {
+		const textarea = document.createElement('textarea');
+		textarea.innerHTML = text;
+		return textarea.value;
+	}	
 	// Function to simulate typing in the debug area
 	function typeOutResponse(element, message) {
 		let index = 0;
-		element.innerText = ""; // Clear previous response
+		element.innerHTML = ""; // Clear previous response
 	
 		function typeNextCharacter() {
 			if (index < message.length) {
-				element.innerText += message[index++];
+				// Check if the current character is an HTML tag
+				if (message[index] === "<") {
+					let tagEnd = message.indexOf(">", index);
+					if (tagEnd !== -1) {
+						// Append the full HTML tag without typing out its content
+						element.innerHTML += message.slice(index, tagEnd + 1);
+						index = tagEnd + 1;
+						setTimeout(typeNextCharacter, 0); // Immediate next char after tag
+						return;
+					}
+				}
+	
+				// Otherwise, it's regular text
+				element.innerHTML += message[index++];
 				setTimeout(typeNextCharacter, 25); // Adjust typing speed here (in ms)
 			}
 		}
 	
 		typeNextCharacter();
 	}
+
 	</script>
 	<script>
 		function postDebugMessage(message) {
