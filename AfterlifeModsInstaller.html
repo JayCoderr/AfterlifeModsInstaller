@@ -140,9 +140,13 @@
 			Here is some different mods you can download:
 			<br>
 			• Afterlife Asset Bundle Loader<br>
+			- https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=sqydeyd4&dl=1
 			• Afterlife Mod Menu - not released yet.<br>
+			- not added<br>
 			• Other Small Patches<br>
+			- not added<br>
 			• Other mods.<br>
+ 			- not added<br>
 			• Code question's related to this<br>
 			<br>
 			You can also import assets with this tool,<br>
@@ -298,7 +302,7 @@
   		"how do I toggle the menu visibility?" : "press f1 to toggle the menu on or off.",
   		"how do I toggle the menu visibility" : "press f1 to toggle the menu on or off.",		
   		"how do I change the menu theme?" : "use the arrow keys to select the 'Background url' or 'Menu Editor' option in the main menu, then press enter to choose a theme.",
-    		"how do I change the menu theme" : "use the arrow keys to select the 'Background url' or 'Menu Editor' option in the main menu, then press enter to choose a theme.",		
+		"how do I change the menu theme" : "use the arrow keys to select the 'Background url' or 'Menu Editor' option in the main menu, then press enter to choose a theme.",		
 		"how do I go to the main menu?" : "press f1 to open the main menu at any time.",
 		"how do I go to the main menu" : "press f1 to open the main menu at any time.",		
   		"how do I confirm my selection?" : "press the enter key to confirm your selection.",
@@ -319,7 +323,11 @@
   		"how do I pause a mod installation" : "Their is not a pause button for downloads.",		
   		"how do I cancel a mod installation?" : "You could probaby just exit the application, I don't have a cancel button added atm.",
   		"how do I cancel a mod installation" : "You could probaby just exit the application, I don't have a cancel button added atm.",
-		"can you give me unity asset bundle script" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`
+		"can you give me unity asset bundle script" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`,
+		"can you give me unity asset bundle script" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`,
+		"what is the unity asset bundle script?" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`,
+		"can you give me unity asset bundle script?" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`,
+		"unity asset bundle script" : `<pre><code>using UnityEditor;\nusing UnityEngine;\nusing System.IO;\n\npublic class AssetBundleBuilder\n{\n\t[MenuItem("Tools/Build AssetBundles")]\n\tstatic void BuildAllAssetBundles()\n\t{\n\t\t/*Set the directory where the asset bundles will be saved*/\n\t\tstring assetBundleDirectory = "Assets/AssetBundles";\n\t\tif (!Directory.Exists(assetBundleDirectory))\n\t\t{\n\t\t\tDirectory.CreateDirectory(assetBundleDirectory);\n\t\t}\n\n\t\t/*Build the asset bundles and save them to the specified directory*/\n\t\tBuildPipeline.BuildAssetBundles(\n\t\t\tassetBundleDirectory,\n\t\t\tBuildAssetBundleOptions.None,\n\t\t\tBuildTarget.StandaloneWindows64 /*Use StandaloneWindows for 32-bit*/\n\t\t);\n\n\t\tDebug.Log("✅ AssetBundles built!");\n\t}\n}</code></pre>`
 	};
 	
 	// Function to handle the user's question
