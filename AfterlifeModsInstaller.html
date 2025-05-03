@@ -194,16 +194,16 @@
 	<div class="question-box">
 		<input type="text" id="userInput" placeholder="Ask Afterlife a question..." />
 		<button class="ask-button" onclick="handleUserQuestion()">Ask</button>
-		<button class="download-button" onclick="downloadMod()">Download Mod</button>
 	</div>
 	
 	<!-- Debug area for messages (AI responses will be typed here) -->
-	<div id="debugArea" class="debug-area"></div>
+	<div id="debugArea" class="debug-area">Waiting for anon user to send a question or command.</div>
 	
 	<!-- Display selected path -->
 	<div id="pathDisplay" class="path-display"></div>
 	
 	<!-- Buttons for actions -->
+	<button class="download-button" onclick="downloadMod()">Download Mod</button>
 	<button class="select-path-button" onclick="selectPath()">Select Installation Path</button>
 	<button class="exit-button" onclick="window.chrome.webview.postMessage('exit')">Exit Application</button>
 	<!-- functions -->
