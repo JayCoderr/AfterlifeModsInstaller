@@ -252,7 +252,7 @@
 		"can i use mods from other websites?" : "Yes, as long as the link goes directly to the file and not a preview page.",
 		"can i use mods from other websites" : "Yes, as long as the link goes directly to the file and not a preview page.",
 		"how do i install a mod?" : "To install a mod, download the mod file, place it in the mod folder, and select it in the mod menu to activate.",
-                "how do i change the settings?" : "To change the settings, open the menu using F1, navigate to the settings section, and adjust the options as needed.",
+        "how do i change the settings?" : "To change the settings, open the menu using F1, navigate to the settings section, and adjust the options as needed.",
   		"what are the menu controls?" : "press f1 to open the menu, use the arrow keys to scroll, press enter key to select a mod.",
   		"how do I open the menu?" : "press f1 to open the menu.",
   		"how do I scroll through the menu?" : "use the arrow keys (up and down) to scroll through the menu.",
@@ -279,14 +279,23 @@
 	
 	// Function to handle the user's question
 	function handleUserQuestion() {
-		const input = document.getElementById("userInput").value.toLowerCase();
+		const input = document.getElementById("userInput").value.trim().toLowerCase(); // Normalize input
 		const responseBox = document.getElementById("debugArea");
 	
-		let matched = Object.entries(predefinedAnswers).find(([key]) => input.includes(key));
-		let response = matched ? matched[1] : "I'm not sure how to answer that. Try asking something else.";
+		// Look for an exact match or partial match with keys
+		let matched = Object.entries(predefinedAnswers).find(([key]) => input === key.toLowerCase()); // Exact match for question
 	
+		// If no exact match, check for partial matches
+		if (!matched) {
+			matched = Object.entries(predefinedAnswers).find(([key]) => input.includes(key.toLowerCase()));
+		}
+	
+		// If a match is found, return the corresponding answer, otherwise a default message
+		let response = matched ? matched[1] : "I'm not sure how to answer that. Try asking something else.";
+		
 		typeOutResponse(responseBox, response);
 	}
+
 	
 	// Function to simulate typing in the debug area
 	function typeOutResponse(element, message) {
