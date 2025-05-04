@@ -46,9 +46,9 @@ namespace AfterlifeModsInstaller
             {
                 Application.Exit();
             }
-            if (message.Contains("www.") || message.Contains("http"))
+            else if (message.Contains("www.") || message.Contains("http"))
             {
-                // Use the message itself as the custom URL
+                // Direct URL from user
                 string customUrl = message.Trim();
 
                 if (string.IsNullOrWhiteSpace(installationPath))
@@ -57,8 +57,58 @@ namespace AfterlifeModsInstaller
                     return;
                 }
 
-                UpdateDebugMessage("");
+                UpdateDebugMessage("📦 Starting mod download from direct URL...");
                 await DownloadModFromUrl(customUrl);
+            }
+            else
+            {
+                // Check message against mod names in remote list
+                string modListUrl = "https://raw.githubusercontent.com/JayCoderr/AfterlifeModsInstaller/master/AfterlifeModList";
+                string matchedUrl = null;
+                string matchedModName = null;
+
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string csvData = await client.GetStringAsync(modListUrl);
+                        var lines = csvData.Split('\n');
+
+                        foreach (var line in lines)
+                        {
+                            var parts = line.Split(',');
+                            if (parts.Length >= 2)
+                            {
+                                string modName = parts[0].Trim();
+                                string modUrl = parts[1].Trim();
+
+                                if (message.Contains(modName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    matchedModName = modName;
+                                    matchedUrl = modUrl;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UpdateDebugMessage($"❌ Failed to fetch mod list: {ex.Message}");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(matchedUrl))
+                {
+                    if (string.IsNullOrWhiteSpace(installationPath))
+                    {
+                        UpdateDebugMessage("Please select an installation path before downloading the mod.");
+                        return;
+                    }
+
+                    UpdateDebugMessage($"📦 Starting mod download: {matchedModName}...");
+                    await DownloadModFromUrl(matchedUrl);
+                }
             }
             if (message.Contains("updateConfig"))
             {
@@ -137,8 +187,33 @@ namespace AfterlifeModsInstaller
                     return;
                 }
 
-                UpdateDebugMessage("Starting mod download...");
-                string defaultUrl = "https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=hq0ge3m5&dl=1";
+                UpdateDebugMessage("");
+
+                string ADM = "Afterlife Default Mod";
+                string defaultUrl = null;
+
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string urlFile = "https://raw.githubusercontent.com/JayCoderr/AfterlifeModsInstaller/refs/heads/master/AfterlifeDefualtMod";
+                        defaultUrl = await client.GetStringAsync(urlFile);
+                        defaultUrl = defaultUrl.Trim();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UpdateDebugMessage($"❌ Failed to fetch download URL: {ex.Message}");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(defaultUrl))
+                {
+                    UpdateDebugMessage("❌ No valid URL found in remote file.");
+                    return;
+                }
+
+                UpdateDebugMessage($"📦 Starting mod download: {ADM}...");
                 await DownloadModFromUrl(defaultUrl);
             }
             else if (message == "selectPath")
@@ -270,7 +345,7 @@ namespace AfterlifeModsInstaller
                 ZipFile.ExtractToDirectory(melonZipPath, installationPath, overwriteFiles: true);
                 File.Delete(melonZipPath);
 
-                UpdateDebugMessage($"Installed MelonLoader {tagName} ({architecture}).");
+                UpdateDebugMessage($"Installed MelonLoader {tagName} ({architecture})\n\nEverything that is needed is now installed,\nYou can exit this application if you want.");
             }
             catch (Exception ex)
             {
