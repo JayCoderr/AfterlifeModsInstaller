@@ -205,37 +205,40 @@
 	<button class="select-path-button" onclick="selectPath()">Select Installation Path</button>
 	<button class="exit-button" onclick="window.chrome.webview.postMessage('exit')">Exit Application</button>
 	<!-- functions -->
-	<script>
+<script>
 	async function simulateTypingHtml(element, delay = 30) {
+		const parser = new DOMParser();
 		const html = element.innerHTML;
-		element.innerHTML = ''; // Clear original content
-	
-		let i = 0;
-		const typeChar = async () => {
-			if (i < html.length) {
-				const char = html[i];
-				// Preserve tags like <br>
-				if (char === '<') {
-					const endTag = html.indexOf('>', i);
-					element.innerHTML += html.slice(i, endTag + 1);
-					i = endTag + 1;
-				} else {
-					element.innerHTML += char;
-					i++;
+		const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+		element.innerHTML = ''; // Clear the element
+
+		async function typeNode(node, parent) {
+			if (node.nodeType === Node.TEXT_NODE) {
+				for (let char of node.textContent) {
+					parent.append(char);
+					await new Promise(resolve => setTimeout(resolve, delay));
 				}
-				await new Promise(resolve => setTimeout(resolve, delay));
-				typeChar();
+			} else if (node.nodeType === Node.ELEMENT_NODE) {
+				const clone = node.cloneNode(false); // clone without children
+				parent.appendChild(clone);
+				for (let child of node.childNodes) {
+					await typeNode(child, clone); // recurse
+				}
 			}
-		};
-	
-		typeChar();
+		}
+
+		const container = doc.body.firstChild;
+		for (let child of container.childNodes) {
+			await typeNode(child, element);
+		}
 	}
-	
+
 	window.onload = () => {
 		const p = document.getElementById("typeTarget");
-		simulateTypingHtml(p, 25); // adjust typing speed here
+		simulateTypingHtml(p, 25);
 	};
-	</script>
+</script>
+
 	<script>
 	// Predefined responses
 	const predefinedAnswers = {
