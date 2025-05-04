@@ -39,8 +39,11 @@ If you do it the dropbox way just change dl=0 to dl=1<br>
 <br><br>
 You can import assets like this:<br>
 type "install asset {name Of Asset}"<br>
-then click import asset.<br><br>
-you can reach out to the discord here:<br>
+Then you need to drop the asset files in the game<br>
+Directory/install directory you set with the ai.<br>
+then click import asset, the config will be updated,<br>
+And the assets will be moved to the correct folder.<br><br>
+You can reach out to the discord here:<br>
 <a href="https://discord.gg/W9mQFFJq" target="_blank" rel="noopener noreferrer">
   Visit Afterlife Mod Installer Discord
 </a>
