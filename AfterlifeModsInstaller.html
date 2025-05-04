@@ -164,38 +164,27 @@
 <body>
     <h1>Afterlife Mods Installer</h1>
 	<div class="card" id="cardText">
-		<p id="typeTarget">
-			Hello, Anonymous user, this is Afterlife Reloaded Ai,<br><br>
-			Welcome to the dark side of programming,<br>
-			This is your modding dashboard,<br><br>
-			Install your first Afterlife Reloaded schedule 1,<br>
-			mod below with download mod button!<br><br>
-			You will need to select a install path first, to get started,<br>
-			where you would like everything installed, I suggest you choose<br>
-			your steam game path for example mine is:<br><br>
-			"C:\Program Files (x86)\Steam\steamapps\common\Schedule I"
-			<br><br>
-			Your's is probably the same,<br>
-			Unless you set your pc up differently from a normal setup.
-			<br><br>
-			Here is some different mods you can download:
-			<br>
-			• Afterlife Asset Bundle Loader<br>
-			<span class="url-trim">https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=sqydeyd4&dl=1</span><br><br>
-			• Afterlife Mod Menu - not released yet.<br>
-			- not added<br>
-			• Other Small Patches<br>
-			- not added<br>
-			• Other mods.<br>
- 			- not added<br>
-			• Code question's related to this<br>
-			• You can do custom mods by providing the ai<br> 
-			- question as a url to a direct .zip url or .rar url<br>
-			<br>
-			You can also import assets with this tool,<br>
-			you can get a asset bundler script for unity engine,<br>
-			as well as other things.<br>
-		</p>
+    <p id="typeTarget">Loading mod information...</p>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modListUrl = 'https://raw.githubusercontent.com/JayCoderr/AfterlifeModsInstaller/refs/heads/master/messageOfTheDay'; // Replace with your GitHub raw file URL
+            
+            // Fetch the content from the raw GitHub file
+            fetch(modListUrl)
+                .then(response => response.text())
+                .then(data => {
+                    // Once fetched, set the content inside the element with id 'typeTarget'
+                    const typeTargetElement = document.getElementById('typeTarget');
+                    typeTargetElement.innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching mod content:', error);
+                    const typeTargetElement = document.getElementById('typeTarget');
+                    typeTargetElement.innerHTML = 'Error loading mod information.';
+                });
+        });
+    </script>
 	</div>
 
 	<!-- Text input for user questions -->
@@ -432,7 +421,6 @@
 	
 		typeNextCharacter();
 	}
-
 	</script>
 	<script>
 		function postDebugMessage(message) {
