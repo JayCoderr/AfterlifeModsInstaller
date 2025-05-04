@@ -35,8 +35,7 @@ type "Afterlife Bundle Loader" and click download mod.<br><br>
 - Code question's related to this application.<br>
 • You can do custom mods by providing the ai<br> 
 - questions as a url to a direct .zip url or .rar url<br>
-If you do it the dropbox way just change dl=0 to dl=1<br>
-<br><br>
+If you do it the dropbox way just change dl=0 to dl=1<br><br>
 You can import assets like this:<br>
 type "install asset {name Of Asset}"<br>
 Then you need to drop the asset files in the game<br>
