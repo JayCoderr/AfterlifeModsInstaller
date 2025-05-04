@@ -1,8 +1,13 @@
-Hello, Anonymous user, this is Afterlife Reloaded Ai,<br><br>
-Welcome to the dark side of programming,<br>
-This is your modding dashboard,<br><br>
-Install your first Afterlife Reloaded schedule 1,<br>
-mod below with download mod button!<br><br>
+Hello, Anonymous user, this is Afterlife Reloaded AI,<br>
+This is a heavily modified version from:<br>
+https://www.afterlifereloaded.com.<br><br>
+Welcome to the dark side of programming/modding,<br><br>
+This is your modding dashboard for unity games,<br><br>
+Install your first Afterlife Reloaded,<br>
+mod below with download mod button!<br>
+this will download a default mod unless you specifiy.<br>
+Example you can ask the ai "Afterlife Bundle Loader"<br>
+Then click download and it will be downloaded.<br><br>
 You will need to select a install path first, to get started,<br>
 where you would like everything installed, I suggest you choose<br>
 your steam game path for example mine is:<br><br>
@@ -14,19 +19,22 @@ Unless you set your pc up differently from a normal setup.
 Here is some different mods you can download:
 <br>
 • Afterlife Asset Bundle Loader<br>
-<span class="url-trim">https://www.dropbox.com/scl/fi/7ditv85uzenm8q950vva2/AfterlifeModInstaller.zip?rlkey=o8h04h738qiphrrv4xjppcgao&st=sqydeyd4&dl=1</span><br><br>
-
+type "Afterlife Bundle Loader" and click download mod.<br><br>
 • Afterlife Mod Menu - not released yet.<br>
-- not added<br><br>
-
+- not added - will be added soon<br><br>
 • Other Small Patches<br>
 - not added<br><br>
 • Other mods.<br>
 - not added<br><br>
-• Code question's related to this<br>
+• what kind of question can you ask,<br> 
+- Code question's related to this application.<br>
 • You can do custom mods by providing the ai<br> 
-- question as a url to a direct .zip url or .rar url<br>
+- questions as a url to a direct .zip url or .rar url<br>
+If you do it the dropbox way just change dl=0 to dl=1<br>
 <br><br>
-You can also import assets with this tool,<br>
-you can get a asset bundler script for unity engine,<br>
-as well as other things.<br>
+You can import assets like this:<br>
+type "install asset {name Of Asset}"<br>
+then click import asset.<br><br>
+you can reach out to the discord here:<br>
+https://discord.gg/W9mQFFJq<br>
+I will try to keep the discord link up to date every 7 days.
